@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { StreamProvider } from "@/constants";
 import type { StreamProviderInjection } from "@/customTypes";
-import { inject, ref, computed } from "vue";
+import { inject, ref } from "vue";
 import AppButton from "../AppButton/AppButton.vue";
 import AppLiveCamera from "../AppLiveCamera/AppLiveCamera.vue";
 import AppRequestCameraButton from "../AppRequestCameraButton/AppRequestCameraButton.vue";
