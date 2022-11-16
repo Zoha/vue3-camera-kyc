@@ -24,7 +24,9 @@ async function selectDeviceToStream(
 ) {
   try {
     stopCurrentSelectedStreamTracks();
-    selectedDevice.value = devices.value.find((i) => i === deviceInfo);
+    selectedDevice.value = devices.value.find(
+      (i) => i.deviceId === deviceInfo.deviceId
+    );
     const cons = {
       video: deviceInfo.deviceId
         ? {
@@ -40,9 +42,16 @@ async function selectDeviceToStream(
   }
 }
 
-async function updateDevicesList(withAudio = false) {
+async function updateDevicesList(withAudio = false): Promise<void> {
   const allDevices = await navigator.mediaDevices.enumerateDevices();
-  devices.value = allDevices.filter((device) => device.kind === "videoinput");
+  const videoInputs = allDevices.filter(
+    (device) => device.kind === "videoinput"
+  );
+  if (!videoInputs.length) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    return updateDevicesList(withAudio);
+  }
+  devices.value = videoInputs;
   selectDeviceToStream(devices.value[0], withAudio);
 }
 
