@@ -7,10 +7,6 @@ const stream = ref<MediaStream>();
 const devices = ref<MediaDeviceInfo[]>([]);
 const selectedDevice = ref<MediaDeviceInfo>();
 
-function updateStream(newValue: MediaStream) {
-  stream.value = newValue;
-}
-
 function stopCurrentSelectedStreamTracks() {
   stream.value?.getTracks().forEach((track) => {
     track.stop();
@@ -35,8 +31,8 @@ async function selectDeviceToStream(
         : { facingMode: "environment" },
       audio: withAudio,
     };
-    let stream = await navigator.mediaDevices.getUserMedia(cons);
-    updateStream(stream);
+    stream.value = await navigator.mediaDevices.getUserMedia(cons);
+    return updateDevicesList();
   } catch (e) {
     console.error((e as Error).message);
   }
@@ -52,7 +48,9 @@ async function updateDevicesList(withAudio = false): Promise<void> {
     return updateDevicesList(withAudio);
   }
   devices.value = videoInputs;
-  selectDeviceToStream(devices.value[0], withAudio);
+  if (!stream.value) {
+    selectDeviceToStream(devices.value[0], withAudio);
+  }
 }
 
 async function requestForStream(withAudio = false) {

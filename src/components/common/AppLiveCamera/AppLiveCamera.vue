@@ -51,6 +51,11 @@ async function updateVideoPlayerStream() {
   videoEl.srcObject = stream.value ?? null;
   await videoEl.play();
   configureVideoWidthStyle();
+  // retry to be sure video is initialized
+  // sometimes on ios it is not available at first
+  setTimeout(() => {
+    configureVideoWidthStyle();
+  }, 500);
 }
 
 watch(stream, async () => {
