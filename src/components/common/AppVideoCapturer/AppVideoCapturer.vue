@@ -54,7 +54,7 @@ function startRecording() {
     mimeType: "video/webm",
   });
   mediaRecorder.value.ondataavailable = onRecorderDataAvailable;
-  mediaRecorder.value.start(1000);
+  mediaRecorder.value.start(350);
 }
 
 function onTryAgainClick() {
@@ -93,6 +93,7 @@ async function sendVideo() {
     <div v-show="stream">
       <AppLiveCamera
         v-show="recordingStatus !== RecordingStates.RECORDED"
+        :is-recording="recordingStatus == RecordingStates.RECORDING"
         @init="onVideoElInit"
       />
       <video

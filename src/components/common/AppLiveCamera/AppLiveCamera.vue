@@ -7,6 +7,15 @@ const emit = defineEmits<{
   (e: "init", el: HTMLVideoElement | undefined): void;
 }>();
 
+const props = withDefaults(
+  defineProps<{
+    isRecording?: boolean;
+  }>(),
+  {
+    isRecording: false,
+  }
+);
+
 const { stream, devices, selectDeviceToStream, selectedDevice } =
   inject<StreamProviderInjection>(
     StreamProvider,
@@ -73,7 +82,10 @@ onMounted(() => {
 
 <template>
   <div v-show="stream" ref="videoContainer" class="relative">
-    <div class="absolute flex justify-center w-full pt-3 z-10">
+    <div
+      v-show="!isRecording"
+      class="absolute flex justify-center w-full pt-3 z-10"
+    >
       <select
         @change="updateSelectedStreamTrack"
         :value="selectedDevice?.deviceId"
@@ -88,6 +100,17 @@ onMounted(() => {
         </option>
       </select>
     </div>
-    <video ref="video" width="0" height="0" class="mx-auto block" muted />
+    <div
+      v-if="props.isRecording"
+      class="absolute right-0 left-0 bottom-0 mb-3 mx-auto animate-ping w-2 h-2 rounded-full bg-red-500"
+    />
+    <video
+      ref="video"
+      width="0"
+      height="0"
+      class="mx-auto block outline-red-500"
+      :class="{ 'outline outline-2': isRecording }"
+      muted
+    />
   </div>
 </template>
