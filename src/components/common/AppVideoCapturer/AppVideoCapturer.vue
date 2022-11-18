@@ -7,6 +7,7 @@ import AppLiveCamera from "../AppLiveCamera/AppLiveCamera.vue";
 import AppRequestCameraButton from "../AppRequestCameraButton/AppRequestCameraButton.vue";
 import { uploadVideo } from "@/services/videoService";
 import { useNotification } from "@kyvg/vue3-notification";
+import AppStopRecordingButton from "../AppStopRecordingButton/AppStopRecordingButton.vue";
 
 enum RecordingStates {
   NOT_RECORDED,
@@ -52,11 +53,7 @@ function startRecording() {
   mediaRecorder.value = new MediaRecorder(stream.value, {
     mimeType: "video/webm",
   });
-  mediaRecorder.value.addEventListener(
-    "dataavailable",
-    onRecorderDataAvailable
-  );
-  mediaRecorder.value.addEventListener("stop", onRecorderStop);
+  mediaRecorder.value.ondataavailable = onRecorderDataAvailable;
   mediaRecorder.value.start(1000);
 }
 
@@ -66,6 +63,7 @@ function onTryAgainClick() {
 
 function onStopClick() {
   mediaRecorder.value?.stop();
+  onRecorderStop();
 }
 
 async function sendVideo() {
@@ -114,13 +112,10 @@ async function sendVideo() {
       >
         Start Recording
       </AppButton>
-      <AppButton
+      <AppStopRecordingButton
         v-if="recordingStatus === RecordingStates.RECORDING"
-        class="bg-red-500 hover:bg-red-400 my-2"
         @click="onStopClick"
-      >
-        Stop Recording
-      </AppButton>
+      />
       <div
         v-if="recordingStatus === RecordingStates.RECORDED && !isSendingVideo"
         class="text-center cursor-pointer text-gray-800 hover:text-gray-600 py-2 hover:underline my-2"

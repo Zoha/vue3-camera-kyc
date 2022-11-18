@@ -20,9 +20,9 @@ async function selectDeviceToStream(
 ) {
   try {
     stopCurrentSelectedStreamTracks();
-    selectedDevice.value = devices.value.find(
-      (i) => i.deviceId === deviceInfo.deviceId
-    );
+    selectedDevice.value =
+      devices.value.find((i) => i.deviceId === deviceInfo.deviceId) ??
+      devices.value[0];
     const cons = {
       video: deviceInfo.deviceId
         ? {
@@ -48,7 +48,7 @@ async function updateDevicesList(withAudio = false): Promise<void> {
     return updateDevicesList(withAudio);
   }
   devices.value = videoInputs;
-  if (!stream.value) {
+  if (!stream.value || !selectedDevice.value?.deviceId) {
     selectDeviceToStream(devices.value[0], withAudio);
   }
 }
