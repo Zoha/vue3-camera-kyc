@@ -9,7 +9,13 @@ import AppRequestCameraButton from "../AppRequestCameraButton/AppRequestCameraBu
 import { dataURIToBlob } from "@/utils/dataURIToBlob";
 import { uploadImage } from "@/services/imageServices";
 import { useNotification } from "@kyvg/vue3-notification";
+import AppNationalCardFrontMask from "../AppNationalCardFrontMask/AppNationalCardFrontMask.vue";
+import AppNationalCardBackMask from "../AppNationalCardBackMask/AppNationalCardBackMask.vue";
 
+const frontImageText = (window as unknown as { frontImageText: string })
+  .frontImageText as string;
+const isForBack = (window as unknown as { isForCardBack: boolean })
+  .isForCardBack as boolean;
 const canvasEl = ref<HTMLCanvasElement>();
 const videoEl = ref<HTMLVideoElement>();
 const imageCaptured = ref(false);
@@ -76,12 +82,19 @@ async function submitImage() {
       <AppRequestCameraButton class="m-auto" />
     </div>
     <div v-show="stream">
-      <AppLiveCamera v-show="!imageCaptured" @init="onVideoElInit" />
+      <div class="relative inline-block text-center">
+        <AppLiveCamera v-show="!imageCaptured" @init="onVideoElInit" />
+        <AppNationalCardBackMask v-if="!imageCaptured && isForBack" />
+        <AppNationalCardFrontMask v-if="!imageCaptured && !isForBack" />
+      </div>
+      <p v-if="!imageCaptured" class="py-4">{{ frontImageText }}</p>
+
       <AppImageCanvas
         v-show="imageCaptured"
         :width="videoEl?.width"
         @init="onCanvasElInit"
       />
+
       <AppButton v-if="!imageCaptured" @click="drawImage" class="my-2">
         Capture Image
       </AppButton>
