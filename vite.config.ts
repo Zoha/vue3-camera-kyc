@@ -18,7 +18,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         video: resolve(__dirname, "htmls/video.html"),
-        image: resolve(__dirname, "htmls/image.html"),
+        front: resolve(__dirname, "htmls/front.html"),
+        back: resolve(__dirname, "htmls/back.html"),
       },
     },
   },
