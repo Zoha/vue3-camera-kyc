@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1048" height="656" viewBox="0 0 1048 656">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #f5742d;
+        stroke-width: 6.78px;
+      }
+    </style>
+  </defs>
+  <rect id="Rounded_Rectangle_1" data-name="Rounded Rectangle 1" class="cls-1" width="1048" height="656" rx="45" ry="45"/>
+  <circle class="cls-1" cx="198.5" cy="242.5" r="88.5"/>
+  <path id="Rounded_Rectangle_2" data-name="Rounded Rectangle 2" class="cls-1" d="M128.531,360.094H270.625a85,85,0,0,1,85,85v39.57a25.242,25.242,0,0,1-25.242,25.242H68.773a25.242,25.242,0,0,1-25.242-25.242v-39.57A85,85,0,0,1,128.531,360.094Z"/>
+  <ellipse class="cls-1" cx="928.157" cy="72.672" rx="42.719" ry="42.734"/>
+  <rect id="Rounded_Rectangle_3" data-name="Rounded Rectangle 3" class="cls-1" x="579.625" y="183.438" width="421.935" height="39.312" rx="17.5" ry="17.5"/>
+  <rect id="Rounded_Rectangle_3_copy" data-name="Rounded Rectangle 3 copy" class="cls-1" x="712.875" y="320.438" width="288.685" height="39.656" rx="17.5" ry="17.5"/>
+</svg>

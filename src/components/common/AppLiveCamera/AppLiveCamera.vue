@@ -106,8 +106,7 @@ onMounted(() => {
     />
     <video
       ref="video"
-      width="0"
-      height="0"
+      height="800"
       class="mx-auto block outline-red-500"
       :class="{ 'outline outline-2': isRecording }"
       muted

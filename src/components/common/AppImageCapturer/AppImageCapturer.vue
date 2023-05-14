@@ -9,13 +9,11 @@ import AppRequestCameraButton from "../AppRequestCameraButton/AppRequestCameraBu
 import { dataURIToBlob } from "@/utils/dataURIToBlob";
 import { uploadImage } from "@/services/imageServices";
 import { useNotification } from "@kyvg/vue3-notification";
-import AppNationalCardFrontMask from "../AppNationalCardFrontMask/AppNationalCardFrontMask.vue";
-import AppNationalCardBackMask from "../AppNationalCardBackMask/AppNationalCardBackMask.vue";
+import AppNationalCardMask from "../AppNationalCardMask/AppNationalCardMask.vue";
 
 const frontImageText = (window as unknown as { frontImageText: string })
   .frontImageText as string;
-const isForBack = (window as unknown as { isForCardBack: boolean })
-  .isForCardBack as boolean;
+
 const canvasEl = ref<HTMLCanvasElement>();
 const videoEl = ref<HTMLVideoElement>();
 const imageCaptured = ref(false);
@@ -33,11 +31,33 @@ function drawImage() {
     return;
   }
   imageCaptured.value = true;
-  const width = video.width * 3;
-  const height = video.height * 3;
-  canvasEl.value?.setAttribute("width", width.toString());
-  canvasEl.value?.setAttribute("height", height.toString());
-  ctx.value?.drawImage(video, 0, 0, width, height);
+  const maskEl = document.getElementById("camera-mask-image");
+  const maskedWidth =
+    (maskEl?.clientWidth || 0) + (maskEl?.clientWidth || 0) / 4;
+  const maskedHeight =
+    (maskEl?.clientHeight || 0) + (maskEl?.clientHeight || 0) / 4;
+  const canvasWidth = maskedWidth * 3;
+  const canvasHeight = maskedHeight * 3;
+  canvasEl.value?.setAttribute("width", canvasWidth.toString());
+  canvasEl.value?.setAttribute("height", canvasHeight.toString());
+
+  const coefficientForW = video.videoWidth / video.width;
+  const coefficientForH = video.videoHeight / video.height;
+
+  const maskStartPointX = video.width / 2 - maskedWidth / 2;
+  const maskStartPointY = video.height / 2 - maskedHeight / 2;
+
+  ctx.value?.drawImage(
+    video,
+    maskStartPointX * coefficientForW,
+    maskStartPointY * coefficientForH,
+    maskedWidth * coefficientForW,
+    maskedHeight * coefficientForH,
+    0,
+    0,
+    canvasWidth,
+    canvasHeight
+  );
 }
 
 function onVideoElInit(vEl: HTMLVideoElement | undefined) {
@@ -84,8 +104,7 @@ async function submitImage() {
     <div v-show="stream">
       <div class="relative inline-block text-center">
         <AppLiveCamera v-show="!imageCaptured" @init="onVideoElInit" />
-        <AppNationalCardBackMask v-if="!imageCaptured && isForBack" />
-        <AppNationalCardFrontMask v-if="!imageCaptured && !isForBack" />
+        <AppNationalCardMask v-if="!imageCaptured" />
       </div>
       <p v-if="!imageCaptured" class="py-4">{{ frontImageText }}</p>
 
