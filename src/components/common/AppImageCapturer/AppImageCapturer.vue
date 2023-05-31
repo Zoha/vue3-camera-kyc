@@ -11,8 +11,8 @@ import { uploadImage } from "@/services/imageServices";
 import { useNotification } from "@kyvg/vue3-notification";
 import AppNationalCardMask from "../AppNationalCardMask/AppNationalCardMask.vue";
 
-const frontImageText = (window as unknown as { frontImageText: string })
-  .frontImageText as string;
+const actionText = (window as unknown as { actionText: string })
+  .actionText as string;
 
 const canvasEl = ref<HTMLCanvasElement>();
 const videoEl = ref<HTMLVideoElement>();
@@ -106,7 +106,7 @@ async function submitImage() {
         <AppLiveCamera v-show="!imageCaptured" @init="onVideoElInit" />
         <AppNationalCardMask v-if="!imageCaptured" />
       </div>
-      <p v-if="!imageCaptured" class="py-4">{{ frontImageText }}</p>
+      <p v-if="!imageCaptured" class="py-4">{{ actionText }}</p>
 
       <AppImageCanvas
         v-show="imageCaptured"

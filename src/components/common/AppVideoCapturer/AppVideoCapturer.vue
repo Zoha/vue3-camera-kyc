@@ -23,6 +23,9 @@ const recorderBlobs = ref<Blob[]>([]);
 const recordedVideo = ref<string>("");
 const isSendingVideo = ref(false);
 
+const actionText = (window as unknown as { actionText: string })
+  .actionText as string;
+
 const { notify } = useNotification();
 
 function onVideoElInit(vEl: HTMLVideoElement | undefined) {
@@ -105,6 +108,11 @@ async function sendVideo() {
         controls
         :src="recordedVideo"
       />
+
+      <p v-if="recordingStatus === RecordingStates.NOT_RECORDED" class="py-4">
+        {{ actionText }}
+      </p>
+
       <!-- start recording -->
       <AppButton
         v-if="recordingStatus === RecordingStates.NOT_RECORDED"
