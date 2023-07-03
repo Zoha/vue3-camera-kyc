@@ -6,6 +6,7 @@ import AppCircularTicks from "@/components/common/AppCircularTicks/AppCircularTi
 
 const emit = defineEmits<{
   (e: "init", el: HTMLVideoElement | undefined): void;
+  (e: "videoSizeChange", width: number, height: number): void;
 }>();
 
 const props = withDefaults(
@@ -65,12 +66,16 @@ function configureVideoWidthStyle() {
       videoElContainer.value.style.height = targetHeight + "px";
       videoWidth.value = targetHeight;
       videoHeight.value = targetHeight;
+      emit("videoSizeChange", targetHeight, targetHeight);
     } else {
       videoElContainer.value.style.width = targetWidth + "px";
       videoElContainer.value.style.height = targetWidth + "px";
-      videoWidth.value = targetHeight;
-      videoHeight.value = targetHeight;
+      videoWidth.value = targetWidth;
+      videoHeight.value = targetWidth;
+      emit("videoSizeChange", targetWidth, targetWidth);
     }
+  } else {
+    emit("videoSizeChange", targetWidth, targetHeight);
   }
 }
 
@@ -130,7 +135,7 @@ onMounted(() => {
     <div
       ref="videoElContainer"
       class="video-container overflow-hidden rounded-full m-auto"
-      :class="{ 'my-10': isCircle }"
+      :class="{ 'my-5': isCircle }"
     >
       <video
         ref="video"
@@ -142,8 +147,8 @@ onMounted(() => {
     </div>
     <AppCircularTicks
       v-if="isCircle"
-      :width="600"
-      :height="600"
+      :width="videoWidth + 20"
+      :height="videoHeight + 20"
       :percent="videoLengthProgressPercent"
     />
   </div>

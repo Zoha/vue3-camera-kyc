@@ -41,6 +41,6 @@ onBeforeUnmount(() => {
 
 <template>
   <AppButton class="bg-red-500 hover:bg-red-400 my-2" @click="emit('click')">
-    Stop Recording ({{ counter }})
+    Stop Recording ({{ Math.floor(counter / 2) }})
   </AppButton>
 </template>

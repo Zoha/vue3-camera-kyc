@@ -21,7 +21,6 @@ function drawTicksWithColor() {
   if (!ctx) {
     return;
   }
-  console.log(props.percent);
   const centerX = props.width / 2;
   const centerY = props.height / 2;
   const radius = props.width / 2 - 20;
@@ -38,9 +37,9 @@ function drawTicksWithColor() {
     const y2 = centerY + Math.sin(tickAngle) * (radius - 20);
 
     if (i < numColoredTicks) {
-      ctx.strokeStyle = "blue";
+      ctx.strokeStyle = "#ff0019";
     } else {
-      ctx.strokeStyle = "rgba(0,0,0,.1)";
+      ctx.strokeStyle = "rgba(255,255,255,.3)";
     }
 
     ctx.beginPath();

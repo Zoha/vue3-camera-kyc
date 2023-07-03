@@ -8,6 +8,8 @@ import AppRequestCameraButton from "../AppRequestCameraButton/AppRequestCameraBu
 import { uploadVideo } from "@/services/videoService";
 import { useNotification } from "@kyvg/vue3-notification";
 import AppStopRecordingButton from "../AppStopRecordingButton/AppStopRecordingButton.vue";
+// import SvgIcon from "@jamescoyle/vue-icon";
+// import { mdiAccount } from "@mdi/js";
 
 enum RecordingStates {
   NOT_RECORDED,
@@ -22,6 +24,8 @@ const mediaRecorder = ref<MediaRecorder>();
 const recorderBlobs = ref<Blob[]>([]);
 const recordedVideo = ref<string>("");
 const isSendingVideo = ref(false);
+const videoWidth = ref(0);
+const videoHeight = ref(0);
 const videoLengthProgressPercent = ref(0);
 
 const actionText = (window as unknown as { actionText: string })
@@ -91,6 +95,11 @@ async function sendVideo() {
 function updateVideoLengthProgressPercent(percent: number) {
   videoLengthProgressPercent.value = percent;
 }
+
+function videoSizeChangeHandler(width: number, height: number) {
+  videoWidth.value = width;
+  videoHeight.value = height;
+}
 </script>
 
 <template>
@@ -105,16 +114,28 @@ function updateVideoLengthProgressPercent(percent: number) {
         :is-recording="recordingStatus == RecordingStates.RECORDING"
         :videoLengthProgressPercent="videoLengthProgressPercent"
         @init="onVideoElInit"
+        @videoSizeChange="videoSizeChangeHandler"
       />
-      <video
+      <div
         v-if="recordingStatus === RecordingStates.RECORDED"
-        ref="previewPlayer"
-        class="mx-auto"
-        :width="videoEl?.width"
-        :height="videoEl?.height"
-        controls
-        :src="recordedVideo"
-      />
+        class="inline-block rounded-full overflow-hidden relative cursor-pointer"
+        :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }"
+      >
+        <video
+          ref="previewPlayer"
+          class="mx-auto w-full h-full object-cover"
+          :width="videoWidth"
+          :height="videoHeight"
+          :controls="false"
+          :src="recordedVideo"
+        />
+        <!-- <SvgIcon
+          class="absolute top-0 right-0 bottom-0 left-0 m-auto w-2 h-2 bg-red-500"
+          type="mdi"
+          :path="mdiAccount"
+          :size="0.8"
+        /> -->
+      </div>
 
       <p v-if="recordingStatus === RecordingStates.NOT_RECORDED" class="py-4">
         {{ actionText }}
