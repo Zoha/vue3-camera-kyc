@@ -2,6 +2,7 @@
 import { StreamProvider } from "@/constants";
 import type { StreamProviderInjection } from "@/customTypes";
 import { inject, onMounted, ref, watch } from "vue";
+import AppCircularTicks from "@/components/common/AppCircularTicks/AppCircularTicks.vue";
 
 const emit = defineEmits<{
   (e: "init", el: HTMLVideoElement | undefined): void;
@@ -10,9 +11,13 @@ const emit = defineEmits<{
 const props = withDefaults(
   defineProps<{
     isRecording?: boolean;
+    isCircle?: boolean;
+    videoLengthProgressPercent: number;
   }>(),
   {
     isRecording: false,
+    isCircle: false,
+    videoLengthProgressPercent: 0,
   }
 );
 
@@ -23,11 +28,14 @@ const { stream, devices, selectDeviceToStream, selectedDevice } =
   );
 
 const video = ref<HTMLVideoElement>();
-const videoContainer = ref<HTMLDivElement>();
+const videoAndSelectContainer = ref<HTMLDivElement>();
+const videoElContainer = ref<HTMLDivElement>();
+const videoWidth = ref<number>(0);
+const videoHeight = ref<number>(0);
 
 function configureVideoWidthStyle() {
   const videoEl = video.value;
-  if (!videoEl || !videoContainer.value) {
+  if (!videoEl || !videoAndSelectContainer.value) {
     return;
   }
   const streamWidth = videoEl.videoWidth;
@@ -35,9 +43,9 @@ function configureVideoWidthStyle() {
   const isWidthBigger = streamWidth > streamHeight;
   let targetWidth = 0;
   let targetHeight = 0;
-  const maximumHeight = window.innerHeight - 200; // 80 percent of height
+  const maximumHeight = window.innerHeight - 300; // 80 percent of height
   if (isWidthBigger) {
-    targetWidth = videoContainer.value?.clientWidth ?? 0;
+    targetWidth = videoAndSelectContainer.value?.clientWidth ?? 0;
     targetHeight = (streamHeight / streamWidth) * targetWidth;
     if (targetHeight > maximumHeight) {
       targetHeight = maximumHeight;
@@ -50,6 +58,20 @@ function configureVideoWidthStyle() {
 
   videoEl.width = targetWidth;
   videoEl.height = targetHeight;
+
+  if (props.isCircle && videoElContainer.value) {
+    if (targetWidth > targetHeight) {
+      videoElContainer.value.style.width = targetHeight + "px";
+      videoElContainer.value.style.height = targetHeight + "px";
+      videoWidth.value = targetHeight;
+      videoHeight.value = targetHeight;
+    } else {
+      videoElContainer.value.style.width = targetWidth + "px";
+      videoElContainer.value.style.height = targetWidth + "px";
+      videoWidth.value = targetHeight;
+      videoHeight.value = targetHeight;
+    }
+  }
 }
 
 async function updateVideoPlayerStream() {
@@ -81,10 +103,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-show="stream" ref="videoContainer" class="relative">
+  <div v-show="stream" ref="videoAndSelectContainer" class="relative">
     <div
       v-show="!isRecording"
       class="absolute flex justify-center w-full pt-3 z-10"
+      :class="{ 'mt-10': isCircle }"
     >
       <select
         @change="updateSelectedStreamTrack"
@@ -104,12 +127,24 @@ onMounted(() => {
       v-if="props.isRecording"
       class="absolute right-0 left-0 bottom-0 mb-3 mx-auto animate-ping w-2 h-2 rounded-full bg-red-500"
     />
-    <video
-      ref="video"
-      height="800"
-      class="mx-auto block outline-red-500"
-      :class="{ 'outline outline-2': isRecording }"
-      muted
+    <div
+      ref="videoElContainer"
+      class="video-container overflow-hidden rounded-full m-auto"
+      :class="{ 'my-10': isCircle }"
+    >
+      <video
+        ref="video"
+        height="800"
+        class="mx-auto block outline-red-500 object-cover w-full h-full"
+        :class="{ 'outline outline-2': isRecording }"
+        muted
+      />
+    </div>
+    <AppCircularTicks
+      v-if="isCircle"
+      :width="600"
+      :height="600"
+      :percent="videoLengthProgressPercent"
     />
   </div>
 </template>

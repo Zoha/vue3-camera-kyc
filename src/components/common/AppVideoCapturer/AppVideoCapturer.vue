@@ -22,6 +22,7 @@ const mediaRecorder = ref<MediaRecorder>();
 const recorderBlobs = ref<Blob[]>([]);
 const recordedVideo = ref<string>("");
 const isSendingVideo = ref(false);
+const videoLengthProgressPercent = ref(0);
 
 const actionText = (window as unknown as { actionText: string })
   .actionText as string;
@@ -86,6 +87,10 @@ async function sendVideo() {
     isSendingVideo.value = false;
   }
 }
+
+function updateVideoLengthProgressPercent(percent: number) {
+  videoLengthProgressPercent.value = percent;
+}
 </script>
 
 <template>
@@ -96,7 +101,9 @@ async function sendVideo() {
     <div v-show="stream">
       <AppLiveCamera
         v-show="recordingStatus !== RecordingStates.RECORDED"
+        is-circle
         :is-recording="recordingStatus == RecordingStates.RECORDING"
+        :videoLengthProgressPercent="videoLengthProgressPercent"
         @init="onVideoElInit"
       />
       <video
@@ -123,6 +130,7 @@ async function sendVideo() {
       </AppButton>
       <AppStopRecordingButton
         v-if="recordingStatus === RecordingStates.RECORDING"
+        @progress="updateVideoLengthProgressPercent"
         @click="onStopClick"
       />
       <div

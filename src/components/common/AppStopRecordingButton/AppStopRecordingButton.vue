@@ -4,22 +4,27 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const emit = defineEmits<{
   (e: "click"): void;
+  (e: "progress", percent: number): void;
 }>();
 
+const counterTime = 120;
 const counter = ref<number>(0);
 const timeoutInstance = ref<ReturnType<typeof setTimeout>>();
 
 function decreaseCounter() {
   counter.value--;
+  const percent = 100 - (counter.value * 100) / counterTime;
+  emit("progress", percent);
   if (counter.value > 0) {
-    timeoutInstance.value = setTimeout(decreaseCounter, 1000);
+    timeoutInstance.value = setTimeout(decreaseCounter, 500);
   } else {
     emit("click");
   }
 }
 
 function startDecreasingCounter() {
-  counter.value = 60;
+  counter.value = counterTime;
+  emit("progress", 0);
   decreaseCounter();
 }
 
