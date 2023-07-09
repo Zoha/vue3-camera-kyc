@@ -45,6 +45,7 @@ function configureVideoWidthStyle() {
   let targetWidth = 0;
   let targetHeight = 0;
   const maximumHeight = window.innerHeight - 300; // 80 percent of height
+  const maximumWidth = window.innerWidth - 150;
   if (isWidthBigger) {
     targetWidth = videoAndSelectContainer.value?.clientWidth ?? 0;
     targetHeight = (streamHeight / streamWidth) * targetWidth;
@@ -55,6 +56,10 @@ function configureVideoWidthStyle() {
   } else {
     targetHeight = streamHeight > maximumHeight ? maximumHeight : streamHeight;
     targetWidth = (streamWidth / streamHeight) * targetHeight;
+    if (targetWidth > maximumWidth) {
+      targetWidth = maximumWidth;
+      targetHeight = (streamHeight / streamWidth) * targetWidth;
+    }
   }
 
   videoEl.width = targetWidth;
