@@ -126,7 +126,7 @@ const rulesText = (window as any).rulesText;
       </div>
     </div>
     <div v-show="stream">
-      <div class="relative inline-block text-center">
+      <div class="relative inline-block text-center my-5">
         <AppLiveCamera v-show="!imageCaptured" @init="onVideoElInit" />
         <AppNationalCardMask v-if="!imageCaptured" />
       </div>

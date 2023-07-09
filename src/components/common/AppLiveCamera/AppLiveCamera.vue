@@ -111,10 +111,9 @@ onMounted(() => {
   <div v-show="stream" ref="videoAndSelectContainer" class="relative">
     <div
       v-show="!isRecording"
-      class="absolute flex justify-center w-full pt-3 z-10"
+      class="absolute flex justify-center w-full pt-3 z-10 left-0 right-0 mx-auto max-w-[160px]"
       :class="{
-        'mt-10 left-0 right-0 mx-auto max-w-[160px]': isCircle,
-        'left-0 right-0 mx-auto max-w-xs': !isCircle,
+        'mt-10': isCircle,
       }"
     >
       <select
