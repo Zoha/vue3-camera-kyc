@@ -112,12 +112,15 @@ onMounted(() => {
     <div
       v-show="!isRecording"
       class="absolute flex justify-center w-full pt-3 z-10"
-      :class="{ 'mt-10': isCircle }"
+      :class="{
+        'mt-10 left-0 right-0 mx-auto max-w-[160px]': isCircle,
+        'left-0 right-0 mx-auto max-w-xs': !isCircle,
+      }"
     >
       <select
         @change="updateSelectedStreamTrack"
         :value="selectedDevice?.deviceId"
-        class="p-2 rounded-xl outline-0 border border-gray-600 bg-transparent text-white"
+        class="p-2 rounded-xl outline-0 border border-gray-600 bg-transparent text-white w-full"
       >
         <option
           v-for="option in devices"
@@ -130,12 +133,13 @@ onMounted(() => {
     </div>
     <div
       v-if="props.isRecording"
-      class="absolute right-0 left-0 bottom-0 mb-3 mx-auto animate-ping w-2 h-2 rounded-full bg-red-500"
+      class="absolute right-0 left-0 bottom-0 mb-3 mx-auto animate-ping w-2 h-2 bg-red-500"
+      :class="{ 'rounded-full': isCircle }"
     />
     <div
       ref="videoElContainer"
-      class="video-container overflow-hidden rounded-full m-auto"
-      :class="{ 'my-5': isCircle }"
+      class="video-container overflow-hidden m-auto"
+      :class="{ 'my-5 rounded-full': isCircle }"
     >
       <video
         ref="video"

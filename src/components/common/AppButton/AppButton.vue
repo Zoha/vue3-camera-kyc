@@ -14,7 +14,7 @@ function onClick() {
 
 <template>
   <div
-    class="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 cursor-pointer inline-block rounded-lg relative overflow-hidden"
+    class="px-4 py-2 text-white bg-primary-green-500 hover:bg-primary-green-600 cursor-pointer inline-block rounded-lg relative overflow-hidden"
     @click="onClick"
   >
     <div

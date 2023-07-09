@@ -8,13 +8,23 @@
   </head>
   <body>
     <input type="hidden" name="__RequestVerificationToken" value="token" />
-    <div id="app"></div>
+    <div id="app" dir="rtl"></div>
     <script>
       window.apiUrls = {
         sendImageApiUrl: "https://jsonplaceholder.typicode.com/posts/",
       };
+      window.rulesTitleText =
+        "لطفا قبل از شروع و ضبط ویدیو، به نکات زیر توجه کنید:";
+      window.rulesText = [
+        "قبل از تهیه ویدئو، لازم است دسترسی‌های مورد نیاز برای ضبط و ارسال ویدیو را فعال نمایید.",
+        "حداکثر زمان برای ضبط ویدئو ۶۰ ثانیه است.",
+        "با در نظر گرفتن شئونات اسلامی و بدون ماسک، کلاه و عینک مطمئن شوید که تصویر خود را در کادر ویدئو مشاهده می کنید.",
+      ];
+
       window.isForCardBack = false;
-      window.actionText = "Please upload you national card (front) image";
+      window.actionText = "لطفا از روی کارت ملی خود عکس بگیرید";
+      window.cardTitleText = "ارسال عکس";
+      window.changeMethodUrl = "/";
     </script>
     <script type="module" src="/src/pageScripts/image.ts"></script>
   </body>

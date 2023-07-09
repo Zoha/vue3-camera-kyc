@@ -37,7 +37,7 @@ function drawTicksWithColor() {
     const y2 = centerY + Math.sin(tickAngle) * (radius - 20);
 
     if (i < numColoredTicks) {
-      ctx.strokeStyle = "#ff0019";
+      ctx.strokeStyle = "rgba(0,152,150,1)";
     } else {
       ctx.strokeStyle = "rgba(255,255,255,.3)";
     }

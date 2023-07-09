@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^2.6.1",
+    "@mdi/js": "^7.2.96",
+    "mdi-vue": "^3.0.13",
     "vue": "^3.2.41"
   },
   "devDependencies": {

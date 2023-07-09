@@ -20,7 +20,7 @@ const { requestForStream } = inject<StreamProviderInjection>(
 </script>
 
 <template>
-  <AppButton @click="requestForStream(props.withAudio)">
-    <slot> Start Camera </slot>
+  <AppButton @click="requestForStream(props.withAudio)" class="text-center">
+    <slot> شروع</slot>
   </AppButton>
 </template>

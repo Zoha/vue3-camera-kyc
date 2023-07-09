@@ -8,8 +8,6 @@ import AppRequestCameraButton from "../AppRequestCameraButton/AppRequestCameraBu
 import { uploadVideo } from "@/services/videoService";
 import { useNotification } from "@kyvg/vue3-notification";
 import AppStopRecordingButton from "../AppStopRecordingButton/AppStopRecordingButton.vue";
-// import SvgIcon from "@jamescoyle/vue-icon";
-// import { mdiAccount } from "@mdi/js";
 
 enum RecordingStates {
   NOT_RECORDED,
@@ -27,9 +25,8 @@ const isSendingVideo = ref(false);
 const videoWidth = ref(0);
 const videoHeight = ref(0);
 const videoLengthProgressPercent = ref(0);
-
-const actionText = (window as unknown as { actionText: string })
-  .actionText as string;
+const previewPlayer = ref<HTMLVideoElement>();
+const isPlaying = ref(false);
 
 const { notify } = useNotification();
 
@@ -66,7 +63,12 @@ function startRecording() {
 }
 
 function onTryAgainClick() {
+  videoLengthProgressPercent.value = 0;
   recordingStatus.value = RecordingStates.NOT_RECORDED;
+  if (previewPlayer.value) {
+    previewPlayer.value.currentTime = 0;
+    isPlaying.value = false;
+  }
 }
 
 function onStopClick() {
@@ -100,13 +102,55 @@ function videoSizeChangeHandler(width: number, height: number) {
   videoWidth.value = width;
   videoHeight.value = height;
 }
+
+function onTogglePlayClick() {
+  if (!previewPlayer.value) {
+    return;
+  }
+  if (isPlaying.value) {
+    previewPlayer.value.pause();
+    isPlaying.value = false;
+  } else {
+    previewPlayer.value.currentTime = 0;
+    previewPlayer.value.play();
+    isPlaying.value = true;
+  }
+}
+
+const rulesTitleText = (window as any).rulesTitleText;
+const rulesText = (window as any).rulesText;
+const actionText = (window as any).actionText;
+const videoText = (window as any).videoText;
 </script>
 
 <template>
-  <div class="text-center">
-    <div v-if="!stream" class="flex items-center justify-center h-screen">
-      <AppRequestCameraButton with-audio class="m-auto" />
+  <div class="text-right">
+    <div v-if="!stream">
+      <div class="text-center">
+        <mdicon
+          name="accountCircle"
+          class="inline-block text-gray-300"
+          size="128"
+        />
+      </div>
+      <div class="text-gray-500">
+        {{ rulesTitleText }}
+      </div>
+      <div
+        class="bg-cyan-50 w-full my-8 p-4 border border-cyan-200 text-gray-500 flex space-x-2 space-x-reverse"
+      >
+        <div>
+          <mdicon name="alertCircle" size="32" class="text-primary-green-500" />
+        </div>
+        <div class="flex flex-col space-y-4">
+          <p v-for="(rule, index) in rulesText" :key="index" v-text="rule"></p>
+        </div>
+      </div>
+      <div class="flex items-center justify-center mt-4">
+        <AppRequestCameraButton with-audio class="m-auto grow" />
+      </div>
     </div>
+
     <div v-show="stream">
       <AppLiveCamera
         v-show="recordingStatus !== RecordingStates.RECORDED"
@@ -118,36 +162,52 @@ function videoSizeChangeHandler(width: number, height: number) {
       />
       <div
         v-if="recordingStatus === RecordingStates.RECORDED"
-        class="inline-block rounded-full overflow-hidden relative cursor-pointer"
-        :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }"
+        class="flex justify-center"
       >
-        <video
-          ref="previewPlayer"
-          class="mx-auto w-full h-full object-cover"
-          :width="videoWidth"
-          :height="videoHeight"
-          :controls="false"
-          :src="recordedVideo"
-        />
-        <!-- <SvgIcon
-          class="absolute top-0 right-0 bottom-0 left-0 m-auto w-2 h-2 bg-red-500"
-          type="mdi"
-          :path="mdiAccount"
-          :size="0.8"
-        /> -->
+        <div
+          class="inline-block rounded-full overflow-hidden relative cursor-pointer w-full my-5"
+          :style="{ width: videoWidth + 'px', height: videoHeight + 'px' }"
+        >
+          <video
+            ref="previewPlayer"
+            class="mx-auto w-full h-full object-cover"
+            :width="videoWidth"
+            :height="videoHeight"
+            :controls="false"
+            :src="recordedVideo"
+          />
+          <mdicon
+            :name="isPlaying ? 'pause' : 'play'"
+            class="text-white absolute top-0 left-0 right-0 bottom-0 m-auto w-12 h-12"
+            size="48"
+            @click="onTogglePlayClick"
+          />
+        </div>
       </div>
 
-      <p v-if="recordingStatus === RecordingStates.NOT_RECORDED" class="py-4">
-        {{ actionText }}
-      </p>
+      <div
+        v-if="
+          [RecordingStates.NOT_RECORDED, RecordingStates.RECORDING].includes(
+            recordingStatus
+          )
+        "
+        class="py-4"
+      >
+        <div class="text-gray-500">
+          {{ actionText }}
+        </div>
+        <div class="bg-gray-50 w-full my-8 p-4 border text-gray-500">
+          <p v-text="videoText"></p>
+        </div>
+      </div>
 
       <!-- start recording -->
       <AppButton
         v-if="recordingStatus === RecordingStates.NOT_RECORDED"
-        class="my-2"
+        class="my-2 w-full text-center"
         @click="startRecording"
       >
-        Start Recording
+        شروع ضبط
       </AppButton>
       <AppStopRecordingButton
         v-if="recordingStatus === RecordingStates.RECORDING"
@@ -159,16 +219,16 @@ function videoSizeChangeHandler(width: number, height: number) {
         class="text-center cursor-pointer text-gray-800 hover:text-gray-600 py-2 hover:underline my-2"
         @click="onTryAgainClick"
       >
-        Try again
+        تلاش دوباره
       </div>
       <!-- send video -->
       <AppButton
         v-if="recordingStatus === RecordingStates.RECORDED"
         :is-loading="isSendingVideo"
-        class="my-2 bg-green-500 hover:bg-green-600"
+        class="my-2 bg-green-500 hover:bg-green-600 w-full text-center"
         @click="sendVideo"
       >
-        Send Video
+        ارسال ویدیو
       </AppButton>
     </div>
   </div>

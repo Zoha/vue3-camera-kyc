@@ -94,12 +94,36 @@ async function submitImage() {
     sendingImage.value = false;
   }
 }
+const rulesTitleText = (window as any).rulesTitleText;
+const rulesText = (window as any).rulesText;
 </script>
 
 <template>
-  <div class="text-center">
-    <div v-if="!stream" class="flex items-center justify-center h-screen">
-      <AppRequestCameraButton class="m-auto" />
+  <div>
+    <div v-if="!stream">
+      <div class="text-center">
+        <mdicon
+          name="accountCircle"
+          class="inline-block text-gray-300"
+          size="128"
+        />
+      </div>
+      <div class="text-gray-500">
+        {{ rulesTitleText }}
+      </div>
+      <div
+        class="bg-cyan-50 w-full my-8 p-4 border border-cyan-200 text-gray-500 flex space-x-2 space-x-reverse"
+      >
+        <div>
+          <mdicon name="alertCircle" size="32" class="text-primary-green-500" />
+        </div>
+        <div class="flex flex-col space-y-4">
+          <p v-for="(rule, index) in rulesText" :key="index" v-text="rule"></p>
+        </div>
+      </div>
+      <div class="flex items-center justify-center mt-4">
+        <AppRequestCameraButton with-audio class="m-auto grow" />
+      </div>
     </div>
     <div v-show="stream">
       <div class="relative inline-block text-center">
@@ -114,23 +138,27 @@ async function submitImage() {
         @init="onCanvasElInit"
       />
 
-      <AppButton v-if="!imageCaptured" @click="drawImage" class="my-2">
-        Capture Image
+      <AppButton
+        v-if="!imageCaptured"
+        @click="drawImage"
+        class="my-2 w-full text-center"
+      >
+        گرفتن عکس
       </AppButton>
       <template v-else>
         <div
           v-if="!sendingImage"
-          class="text-center cursor-pointer text-gray-800 hover:text-gray-600 py-2 hover:underline"
+          class="text-center cursor-pointer text-gray-800 hover:text-gray-600 py-2 hover:underline w-full"
           @click="onTryAgainClick"
         >
-          Try again
+          تلاش دوباره
         </div>
         <AppButton
           @click="submitImage"
           :is-loading="sendingImage"
-          class="my-2 bg-green-500 hover:bg-green-600"
+          class="my-2 bg-green-500 hover:bg-green-600 w-full text-center"
         >
-          Send Image
+          ارسال تصویر
         </AppButton>
       </template>
     </div>
