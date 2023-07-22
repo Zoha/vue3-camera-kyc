@@ -7,7 +7,7 @@ const emit = defineEmits<{
   (e: "progress", percent: number): void;
 }>();
 
-const counterTime = 120;
+const counterTime = 60;
 const counter = ref<number>(0);
 const timeoutInstance = ref<ReturnType<typeof setTimeout>>();
 

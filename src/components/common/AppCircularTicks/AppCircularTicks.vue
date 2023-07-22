@@ -14,7 +14,7 @@ const props = withDefaults(
     percent: 0,
   }
 );
-const totalTicks = 120;
+const totalTicks = 60;
 
 function drawTicksWithColor() {
   const ctx = ticksCanvas.value?.getContext("2d");

@@ -80,7 +80,7 @@ async function sendVideo() {
   try {
     isSendingVideo.value = true;
     const blob = new Blob(recorderBlobs.value, {
-      type: "video/webm",
+      type: "video/mp4",
     });
     await uploadVideo(blob);
   } catch (e) {
