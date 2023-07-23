@@ -42,9 +42,7 @@ function onRecorderDataAvailable(e: { data: Blob }) {
 }
 
 function onRecorderStop() {
-  recordedVideo.value = URL.createObjectURL(
-    new Blob(recorderBlobs.value, { type: "video/mp4" })
-  );
+  recordedVideo.value = URL.createObjectURL(new Blob(recorderBlobs.value));
   recordingStatus.value = RecordingStates.RECORDED;
 }
 
@@ -55,9 +53,7 @@ function startRecording() {
   recordedVideo.value = "";
   recorderBlobs.value = [];
   recordingStatus.value = RecordingStates.RECORDING;
-  mediaRecorder.value = new MediaRecorder(stream.value, {
-    mimeType: "video/mp4",
-  });
+  mediaRecorder.value = new MediaRecorder(stream.value);
   mediaRecorder.value.ondataavailable = onRecorderDataAvailable;
   mediaRecorder.value.start(350);
 }
