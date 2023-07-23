@@ -167,6 +167,7 @@ const videoText = (window as any).videoText;
           <video
             ref="previewPlayer"
             class="mx-auto w-full h-full object-cover"
+            playsinline
             :width="videoWidth"
             :height="videoHeight"
             :controls="false"
